@@ -30,10 +30,10 @@ EXPOSE 6379
 WORKDIR /redis
 
 # 复制自定义的 redis.conf 文件到 /etc/redis/redis.conf
-COPY ../redis/conf/redis.conf /etc/redis/redis.conf
+#COPY ../redis/conf/redis.conf /etc/redis/redis.conf
 
 # 设置启动 Redis 的命令
-CMD ["redis-server", "/etc/redis/redis.conf"]
+CMD ["redis-server"]
 
 # 构建阶段
 FROM golang:latest AS builder
@@ -51,10 +51,10 @@ COPY . .
 RUN go build -o main .
 
 # 从 MySQL 阶段复制初始化脚本
-COPY --from=mysql /etc/mysql/my.cnf /etc/mysql/my.cnf
+#COPY --from=mysql /etc/mysql/my.cnf /etc/mysql/my.cnf
 
 # 从 Redis 阶段复制 Redis 配置文件
-COPY --from=redis /etc/redis/redis.conf /etc/redis/redis.conf
+#COPY --from=redis /etc/redis/redis.conf /etc/redis/redis.conf
 
 # 设置 MySQL 和 Redis 地址的环境变量
 ENV MYSQL_ADDR=localhost:3306
