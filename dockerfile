@@ -1,5 +1,5 @@
 # MySQL 阶段
-FROM mysql:8.0 AS mysql
+FROM mysql:latest AS mysql
 
 # 设置 MySQL 环境变量
 ENV MYSQL_ROOT_PASSWORD=a111111
