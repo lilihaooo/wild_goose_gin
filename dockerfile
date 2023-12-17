@@ -12,7 +12,7 @@ ENV LANG=C.UTF-8
 WORKDIR /mysql
 
 # 复制自定义的 my.cnf 文件到 /etc/mysql/my.cnf
-COPY ../mysql/conf/my.cnf /etc/mysql/my.cnf
+#COPY ../mysql/conf/my.cnf /etc/mysql/my.cnf
 
 # 暴露 MySQL 默认端口
 EXPOSE 3306
