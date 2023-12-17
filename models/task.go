@@ -24,7 +24,7 @@ type Task struct {
 }
 
 func (t *Task) GetAllRecord(offset int, limit int) (list []Task, count int64, err error) {
-	query := global.DB.Model(t)
+	query := global.DB.Model(t).Preload("Component").Preload("Custom")
 	query.Count(&count)
 	err = query.Offset(offset).Limit(limit).Find(&list).Error
 	return list, count, err

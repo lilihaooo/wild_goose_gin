@@ -5,6 +5,7 @@ import (
 	"wild_goose_gin/models"
 	"wild_goose_gin/pkg/request"
 	"wild_goose_gin/pkg/response"
+	serializer "wild_goose_gin/serialize"
 )
 
 func (TaskApi) GetTaskList(c *gin.Context) {
@@ -21,6 +22,6 @@ func (TaskApi) GetTaskList(c *gin.Context) {
 		response.FailWithMsg(c, response.FAIL_OPER, "")
 		return
 	}
-	//resList := serializer.BuildTasks(list)
-	response.OkWithList(c, list, count)
+	resList := serializer.BuildTasks(list)
+	response.OkWithList(c, resList, count)
 }

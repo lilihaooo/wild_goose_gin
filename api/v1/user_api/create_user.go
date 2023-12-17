@@ -21,7 +21,6 @@ func (UserApi) CreateUser(c *gin.Context) {
 		response.FailWithMsg(c, response.INVALID_PARAMS, "")
 		return
 	}
-	fmt.Println(&req)
 	if vErr := utils.ZhValidate(&req); vErr != "" {
 		response.FailWithMsg(c, response.FAIL_VALIDATE, vErr)
 		return

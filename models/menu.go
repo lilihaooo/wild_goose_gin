@@ -1,18 +1,31 @@
 package models
 
-import "wild_goose_gin/global"
+import (
+	"wild_goose_gin/global"
+	"wild_goose_gin/models/common_type"
+)
 
 type Menu struct {
-	ID       uint     `json:"id"`
-	Icon     string   `json:"icon"`
-	Path     string   `json:"path"`
-	Title    string   `json:"title"`
-	ParentID uint     `json:"parent_id"`
-	Routes   []*Route `gorm:"many2many:menu_route;"`
-	Subs     []*Menu  `json:"subs" gorm:"foreignKey:ParentID"`
+	ID       *uint                `json:"id"`
+	Icon     string               `json:"icon"`
+	Path     string               `json:"path"`
+	Title    string               `json:"title"`
+	ParentID *uint                `json:"parent_id,omitempty"`
+	Type     common_type.MenuType `json:"type"`
+	Routes   []*Route             `json:"routes"gorm:"many2many:menu_route;"`
+	Subs     []*Menu              `json:"subs" gorm:"foreignKey:ParentID"`
 }
 
 func (m *Menu) GetAllRecord() (menus []*Menu, err error) {
 	err = global.DB.Find(&menus).Error
 	return
+}
+
+func (m *Menu) GetOneRecordById() (*Menu, error) {
+	err := global.DB.Take(&m, m.ID).Error
+	return m, err
+}
+
+func (m *Menu) SaveMenu() error {
+	return global.DB.Save(m).Error
 }

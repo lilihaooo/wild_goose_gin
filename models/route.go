@@ -14,9 +14,25 @@ func (r *Route) GetRouteList() (list []Route, err error) {
 	err = global.DB.Find(&list).Error
 	return list, err
 }
+func (r *Route) GetRouteListByIDs(ids []uint) (list []*Route, err error) {
+	err = global.DB.Where("id IN (?)", ids).Find(&list).Error
+	return list, err
+}
 
 func (r *Route) DeleteAllRecords() error {
-	return global.DB.Exec("DELETE FROM route").Error
+	tx := global.DB.Begin()
+	err := tx.Exec(" DELETE FROM menu_route  WHERE route_id IN (SELECT id FROM route)").Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	err = tx.Exec("DELETE FROM route").Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	tx.Commit()
+	return nil
 }
 
 func (r *Route) AddRoutes(routes []Route) error {

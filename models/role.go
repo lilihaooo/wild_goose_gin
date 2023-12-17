@@ -5,10 +5,9 @@ import (
 )
 
 type Role struct {
-	ID     uint
-	Title  string
-	Menus  []*Menu `gorm:"many2many:role_menu;"`
-	Routes []*Menu `gorm:"many2many:role_route;"`
+	ID    uint
+	Title string
+	Menus []*Menu `gorm:"many2many:role_menu;"`
 }
 
 func (r *Role) GetRoleList() (list []Role, err error) {
