@@ -12,7 +12,7 @@ ENV LANG=C.UTF-8
 WORKDIR /mysql
 
 # 复制自定义的 my.cnf 文件到 /etc/mysql/my.cnf
-COPY /root/lihao/docker/wild_goose_gin_project/mysql/conf/my.cnf /etc/mysql/my.cnf
+COPY mysql/conf/my.cnf /etc/mysql/my.cnf
 
 # 暴露 MySQL 默认端口
 EXPOSE 3306
@@ -30,7 +30,7 @@ EXPOSE 6379
 WORKDIR /redis
 
 # 复制自定义的 redis.conf 文件到 /etc/redis/redis.conf
-COPY /root/lihao/docker/wild_goose_gin_project/redis/conf/redis.conf /etc/redis/redis.conf
+COPY redis/conf/redis.conf /etc/redis/redis.conf
 
 # 设置启动 Redis 的命令
 CMD ["redis-server", "/etc/redis/redis.conf"]
