@@ -1,18 +1,3 @@
-# 构建阶段
-FROM golang:latest AS builder
-
-# 设置工作目录
-WORKDIR /go/src/wild_goose_gin
-
-# 复制 go.mod 和 go.sum 文件并下载依赖项
-COPY go.mod .
-COPY go.sum .
-RUN go mod download
-
-# 复制整个项目并构建 Go 项目
-COPY . .
-RUN go build -o main .
-
 # MySQL 阶段
 FROM mysql:latest AS mysql
 
@@ -27,7 +12,7 @@ ENV LANG=C.UTF-8
 WORKDIR /mysql
 
 # 复制自定义的 my.cnf 文件到 /etc/mysql/my.cnf
-COPY /home/lihao/docker/wild_goose_gin/mysql/conf/my.cnf /etc/mysql/my.cnf
+COPY /home/lihao/docker/wild_goose_gin_project/mysql/conf/my.cnf /etc/mysql/my.cnf
 
 # 暴露 MySQL 默认端口
 EXPOSE 3306
@@ -45,16 +30,25 @@ EXPOSE 6379
 WORKDIR /redis
 
 # 复制自定义的 redis.conf 文件到 /etc/redis/redis.conf
-COPY /home/lihao/docker/wild_goose_gin/redis/conf/redis.conf /etc/redis/redis.conf
+COPY /home/lihao/docker/wild_goose_gin_project/redis/conf/redis.conf /etc/redis/redis.conf
 
 # 设置启动 Redis 的命令
 CMD ["redis-server", "/etc/redis/redis.conf"]
 
-# 最终阶段
-FROM ubuntu:latest
+# 构建阶段
+FROM golang:latest AS builder
 
-# 从构建阶段复制 Go 可执行文件
-COPY --from=builder /go/src/wild_goose_gin/main .
+# 设置工作目录
+WORKDIR /go/src/wild_goose_gin
+
+# 复制 go.mod 和 go.sum 文件并下载依赖项
+COPY go.mod .
+COPY go.sum .
+RUN go mod download
+
+# 复制整个项目并构建 Go 项目
+COPY . .
+RUN go build -o main .
 
 # 从 MySQL 阶段复制初始化脚本
 COPY --from=mysql /etc/mysql/my.cnf /etc/mysql/my.cnf
