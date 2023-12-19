@@ -1,15 +1,25 @@
-# 构建阶段
-FROM golang:latest AS builder
+# 导入基础镜像golang:alpine
+FROM golang:alpine AS builder
 
-# 设置工作目录
+# 设置环境变量
+ENV GO111MODULE=auto \
+    CGO_ENABLED=0 \
+    GOOS=linux \
+    GOARCH=amd64 \
+    GOPROXY="https://goproxy.cn,direct"
+
+# 创建并移动到工作目录（可自定义路径）
 WORKDIR /app
 
-# 复制整个项目并构建 Go 项目
+# 将代码复制到容器中
 COPY . .
+
+# 将代码编译成二进制可执行文件,文件名为 WebApp
 RUN go build -o main .
 
-# 暴露应用程序的端口
+# 声明服务端口
 EXPOSE 8888
 
-# 设置运行 Go 可执行文件的命令
+# 启动容器时运行的命令
 CMD ["./main"]
+
