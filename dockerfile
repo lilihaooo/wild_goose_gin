@@ -1,5 +1,5 @@
 # 构建阶段
-FROM golang:1.19 AS builder
+FROM golang:latest AS builder
 
 # 设置工作目录
 WORKDIR /app
