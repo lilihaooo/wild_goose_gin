@@ -10,14 +10,16 @@ import (
 )
 
 type componentInfo struct {
-	Name          string                         `json:"name"`
-	PN            string                         `json:"pn"`
-	ManualNum     string                         `json:"manual_num"`
-	Group         string                         `json:"group"`
-	ModifiesCount int                            `json:"modifies_count"`
-	CreatedAt     string                         `json:"created_at"`
-	State         common_type.ComponentStageType `json:"state"`
-	IncomeTotal   uint                           `json:"income_total"`
+	Name            string                         `json:"name"`
+	PN              string                         `json:"pn"`
+	ManualNum       string                         `json:"manual_num"`
+	Group           string                         `json:"group"`
+	ModifiesCount   int                            `json:"modifies_count"`
+	CertificateInfo string                         `json:"certificate_info"`
+	CreatedAt       string                         `json:"created_at"`
+	State           common_type.ComponentStageType `json:"state"`
+	IncomeTotal     int                            `json:"income_total"`
+	ClaimTotal      int                            `json:"claim_total"`
 }
 
 func (ComponentApi) GetComponentInfo(c *gin.Context) {
@@ -35,15 +37,26 @@ func (ComponentApi) GetComponentInfo(c *gin.Context) {
 		return
 	}
 
+	certificates := ""
+	if len(data.Certificates) > 0 {
+		for _, one := range data.Certificates {
+			certificates += one.Title + " "
+		}
+		// 去掉末尾的空格
+		certificates = certificates[:len(certificates)-1]
+	}
+
 	res := componentInfo{
-		Name:          data.Name,
-		PN:            data.PN,
-		ManualNum:     data.Manual.Num,
-		Group:         data.Group.Name,
-		ModifiesCount: len(data.Modifies),
-		CreatedAt:     utils.TimeFormat(data.CreatedAt),
-		State:         data.State,
-		IncomeTotal:   data.IncomeTotal,
+		Name:            data.Name,
+		PN:              data.PN,
+		ManualNum:       data.Manual.Num,
+		Group:           data.Group.Name,
+		ModifiesCount:   len(data.Modifies),
+		CreatedAt:       utils.TimeFormat_YMD(data.CreatedAt),
+		State:           data.State,
+		CertificateInfo: certificates,
+		IncomeTotal:     data.IncomeTotal,
+		ClaimTotal:      data.ClaimTotal,
 	}
 	response.OkWithData(c, res)
 }

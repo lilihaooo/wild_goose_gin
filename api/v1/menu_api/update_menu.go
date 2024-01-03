@@ -11,10 +11,10 @@ import (
 type UpdateMenuRequest struct {
 	ID       *uint                `json:"id" validate:"required" label:"ID"`
 	ParentID uint                 `json:"parent_id"`
-	Icon     string               `json:"icon"  label:"图标"`
-	Path     string               `json:"path" validate:"required" label:"跳转路径"`
+	Icon     string               `json:"icon"`
+	Path     string               `json:"path"`
 	Title    string               `json:"title" validate:"required" label:"标题"`
-	RouteIDs []uint               `json:"route_ids" label:"路由ids"`
+	RouteIDs []uint               `json:"route_ids"`
 	Type     common_type.MenuType `json:"type"`
 	Subs     []*models.Menu       `json:"subs"`
 }

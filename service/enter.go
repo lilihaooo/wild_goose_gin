@@ -6,6 +6,7 @@ import (
 	"wild_goose_gin/service/image_ser"
 	"wild_goose_gin/service/menu_ser"
 	"wild_goose_gin/service/task_ser"
+	"wild_goose_gin/service/user_ser"
 )
 
 type Service struct {
@@ -14,6 +15,7 @@ type Service struct {
 	component_ser.ComponentService
 	task_ser.TaskService
 	menu_ser.MenuService
+	user_ser.UserService
 }
 
 var AppService = new(Service)

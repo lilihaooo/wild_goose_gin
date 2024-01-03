@@ -1,22 +1,23 @@
 package user_api
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"wild_goose_gin/global"
 	"wild_goose_gin/models"
+	"wild_goose_gin/models/common_type"
 	"wild_goose_gin/utils"
 
 	"wild_goose_gin/pkg/response"
 )
 
-type CreateUserRequest struct {
+type UpdateUserRequest struct {
 	UserName string `json:"user_name" validate:"required" label:"用户名"`
 	RoleID   uint   `json:"role_id" validate:"required" label:"角色ID"`
+	GroupID  uint   `json:"group_id"`
 }
 
-func (UserApi) CreateUser(c *gin.Context) {
-	var req CreateUserRequest
+func (UserApi) UpdateUser(c *gin.Context) {
+	var req UpdateUserRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		response.FailWithMsg(c, response.INVALID_PARAMS, "")
 		return
@@ -26,26 +27,20 @@ func (UserApi) CreateUser(c *gin.Context) {
 		return
 	}
 	var model models.User
-	if err := global.DB.Where("user_name = ?", req.UserName).Take(&model).Error; err == nil {
-		response.FailWithMsg(c, response.ERROR_EXIST_RECODE, "用户名已存在")
+	if err := global.DB.Where("user_name = ?", req.UserName).Take(&model).Error; err != nil {
+		response.FailWithMsg(c, response.ERROR_EXIST_RECODE, "用户不存在")
 		return
 	}
-
-	// 对密码进行加密处理
-	hashPassword, err := utils.HashPassword("111111") // 初始密码
-	if err != nil {
-		fmt.Println("密码加密失败!!!")
+	if model.RoleID == common_type.Admin && req.RoleID != common_type.Admin {
+		response.FailWithMsg(c, response.FAIL_OPER, "管理员角色不能修改")
 		return
 	}
-	model = models.User{
-		UserName: req.UserName,
-		//RoleID:   req.RoleID,
-		Password: hashPassword,
-	}
-	if err := model.AddOneRecord(); err != nil {
+	model.RoleID = req.RoleID
+	model.GroupID = &req.GroupID
+	if err := model.UpdateOneRecord(); err != nil {
 		response.FailWithMsg(c, response.FAIL_OPER, "")
 		return
 	}
-	response.OkWithMsg(c, "添加成功")
+	response.OkWithMsg(c, "修改成功")
 
 }

@@ -15,7 +15,7 @@ type CreateTaskRequest struct {
 	SN              string                     `json:"sn" validate:"required" label:"序号"`
 	CustomID        uint                       `json:"custom_id" validate:"required" label:"客户id"`
 	DemandType      common_type.TaskDemandType `json:"demand_type" validate:"required" label:"任务要求"`
-	CertificateIDs  []uint                     `json:"certificate_ids" validate:"required" label:"证书ids"`
+	CertificateIDs  *[]uint                    `json:"certificate_ids"`
 	ModifyIDs       []uint                     `json:"modify_ids"`
 	GroupID         uint                       `json:"group_id" validate:"required" label:"分组id"`
 	PlanReleaseDate string                     `json:"plan_release_date" validate:"required" label:"计划放行日期"`
@@ -35,6 +35,7 @@ func (TaskApi) CreateTask(c *gin.Context) {
 	// 获得附件信息
 	componentModel := models.Component{}
 	componentModel.PN = req.PN
+	componentModel.GroupID = req.GroupID
 	component, err := componentModel.GetComponentByPN()
 	if err != nil {
 		response.FailWithMsg(c, response.FAIL_OPER, "")
@@ -62,6 +63,10 @@ func (TaskApi) CreateTask(c *gin.Context) {
 		ComponentID: component.ID,
 	}
 	modifies, err := modifyModel.GetModifiesByIDs(req.ModifyIDs)
+	if err != nil {
+		response.FailWithMsg(c, response.FAIL_OPER, "获取改装失败"+err.Error()) // todo err
+		return
+	}
 	if len(modifies) != len(req.ModifyIDs) {
 		response.FailWithMsg(c, response.FAIL_OPER, "改装有误")
 		return
@@ -69,10 +74,17 @@ func (TaskApi) CreateTask(c *gin.Context) {
 
 	// 根据证书ids, 获得证书信息
 	certificateModel := models.Certificate{}
-	certificates, err := certificateModel.GetCertificatesByIDs(req.CertificateIDs)
-	if len(certificates) != len(req.CertificateIDs) {
-		response.FailWithMsg(c, response.FAIL_OPER, "证书有误")
-		return
+	certificates := []models.Certificate{}
+	if req.CertificateIDs != nil {
+		certificates, err = certificateModel.GetCertificatesByIDs(*req.CertificateIDs)
+		if err != nil {
+			response.FailWithMsg(c, response.FAIL_OPER, "获取证书失败"+err.Error()) // todo err
+			return
+		}
+		if len(certificates) != len(*req.CertificateIDs) {
+			response.FailWithMsg(c, response.FAIL_OPER, "证书有误")
+			return
+		}
 	}
 
 	// 解析时间字符串
@@ -96,19 +108,28 @@ func (TaskApi) CreateTask(c *gin.Context) {
 		response.FailWithMsg(c, response.FAIL_OPER, "任务号已存在")
 		return
 	}
+	// 入场总数+1
+	incomeTotal := component.IncomeTotal + 1
+	// 如果是索赔, 索赔数+1
+	claimTotal := component.ClaimTotal
+	if req.DemandType == common_type.Claim {
+		claimTotal = component.ClaimTotal + 1
+	}
 	task.ComponentID = component.ID
 	task.SN = req.SN
 	task.CustomID = custom.ID
-	task.NodeType = common_type.TaskStart
-	task.DemandType = req.DemandType
+	task.Node = common_type.TaskStart
+	task.Demand = req.DemandType
 	task.Modifies = modifies
 	task.GroupID = component.GroupID
-	task.Certificates = certificates
+	task.Certificates = &certificates
 	task.Remark = req.Remark
 	task.PlanReleaseDate = parsedTime
 	task.TaskNum = taskNum
-	if err := task.AddOneRecord(); err != nil {
-		response.FailWithMsg(c, response.FAIL_OPER, "")
+	// 任务下发
+	err = service.AppService.TaskService.CreateTask(&task, incomeTotal, claimTotal)
+	if err != nil {
+		response.FailWithMsg(c, response.FAIL_OPER, err.Error()) // todo 错误
 		return
 	}
 	response.OkWithMsg(c, "添加成功")

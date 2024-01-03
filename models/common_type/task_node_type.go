@@ -5,12 +5,13 @@ import "encoding/json"
 type TaskNodeType int
 
 const (
-	TaskStart        TaskNodeType = 1 // 开工
-	TaskPreCheck     TaskNodeType = 2 // 预检
-	TaskFaultInspect TaskNodeType = 3 // 故检
-	TaskEndTest      TaskNodeType = 4 // 测试
-	TaskWindUp       TaskNodeType = 5 // 收尾
-	TaskPause        TaskNodeType = 6 // 暂停
+	TaskUnStart      TaskNodeType = 1 // 开工
+	TaskStart        TaskNodeType = 2 // 开工
+	TaskPreCheck     TaskNodeType = 3 // 预检
+	TaskFaultInspect TaskNodeType = 4 // 故检
+	TaskEndTest      TaskNodeType = 5 // 测试
+	TaskWindUp       TaskNodeType = 6 // 收尾
+	TaskPause        TaskNodeType = 7 // 暂停
 )
 
 func (t TaskNodeType) MarshalJSON() ([]byte, error) {
@@ -20,6 +21,8 @@ func (t TaskNodeType) MarshalJSON() ([]byte, error) {
 func (t TaskNodeType) String() string {
 	var str string
 	switch t {
+	case TaskUnStart:
+		str = "未开工"
 	case TaskStart:
 		str = "开工"
 	case TaskPreCheck:

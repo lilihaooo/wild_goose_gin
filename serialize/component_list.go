@@ -7,28 +7,43 @@ import (
 )
 
 type Component struct {
-	ID            uint                           `json:"id"`
-	Name          string                         `json:"name"`
-	PN            string                         `json:"pn"`
-	ManualNum     string                         `json:"manual_num"`
-	ModifiesCount int                            `json:"modifies_count"`
-	Group         string                         `json:"group"`
-	State         common_type.ComponentStageType `json:"state"`
-	CreatedAt     string                         `json:"created_at"`
-	DeletedAt     string                         `json:"deleted_at"`
+	ID             uint                           `json:"id"`
+	Name           string                         `json:"name"`
+	PN             string                         `json:"pn"`
+	ManualNum      string                         `json:"manual_num"`
+	ModifyCount    int                            `json:"modify_count"`
+	Certificates   string                         `json:"certificates"`
+	CertificateIDs []uint                         `json:"certificate_ids"`
+	Group          string                         `json:"group"`
+	State          common_type.ComponentStageType `json:"state"`
+	CreatedAt      string                         `json:"created_at"`
+	DeletedAt      string                         `json:"deleted_at"`
 }
 
 func BuildComponent(item models.Component) Component {
+	certificates := ""
+	certificateIDs := []uint{}
+	if len(item.Certificates) > 0 {
+		for _, one := range item.Certificates {
+			certificates += one.Title + " "
+			certificateIDs = append(certificateIDs, one.ID)
+		}
+		// 去掉末尾的空格
+		certificates = certificates[:len(certificates)-1]
+	}
+
 	return Component{
-		ID:            item.Model.ID,
-		Name:          item.Name,
-		PN:            item.PN,
-		ManualNum:     item.Manual.Num,
-		ModifiesCount: len(item.Modifies),
-		Group:         item.Group.Name,
-		State:         item.State,
-		CreatedAt:     utils.TimeFormat(item.CreatedAt),
-		DeletedAt:     utils.TimeFormat(item.CreatedAt),
+		ID:             item.Model.ID,
+		Name:           item.Name,
+		PN:             item.PN,
+		ManualNum:      item.Manual.Num,
+		ModifyCount:    len(item.Modifies),
+		Certificates:   certificates,
+		CertificateIDs: certificateIDs,
+		Group:          item.Group.Name,
+		State:          item.State,
+		CreatedAt:      utils.TimeFormat_YMD(item.CreatedAt),
+		DeletedAt:      utils.TimeFormat_YMD(item.CreatedAt),
 	}
 }
 

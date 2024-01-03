@@ -14,17 +14,20 @@ type Task struct {
 	SN              string `gorm:"comment:附件序号"`
 	CustomID        uint   `gorm:"comment:客户ID"`
 	Custom          Custom
-	NodeType        common_type.TaskNodeType
-	DemandType      common_type.TaskDemandType
-	Certificates    []Certificate `gorm:"many2many:task_certificate;"`
-	Modifies        []Modify      `gorm:"many2many:task_modify;"`
-	GroupID         uint          `gorm:"comment:分组ID" json:"group_id"`
-	PlanReleaseDate time.Time     `gorm:"comment:计划放行日期" json:"plan_release_date"`
-	Remark          string        `gorm:"comment:备注" json:"remark"`
+	Node            common_type.TaskNodeType
+	Demand          common_type.TaskDemandType
+	Share           common_type.TaskShareType
+	Certificates    *[]Certificate `gorm:"many2many:task_certificate;"`
+	Modifies        []Modify       `gorm:"many2many:task_modify;"`
+	GroupID         uint           `gorm:"comment:分组ID"`
+	PlanReleaseDate time.Time      `gorm:"comment:计划放行日期"`
+	Remark          string         `gorm:"comment:备注"`
+	UserID          *uint          `gorm:"comment:工作者"`
+	User            *User
 }
 
-func (t *Task) GetAllRecord(offset int, limit int) (list []Task, count int64, err error) {
-	query := global.DB.Model(t).Preload("Component").Preload("Custom")
+func (t *Task) GetAllRecord(offset int, limit int, conditions string) (list []Task, count int64, err error) {
+	query := global.DB.Model(t).Where(conditions).Preload("Component").Preload("Custom").Preload("Certificates").Preload("Modifies")
 	query.Count(&count)
 	err = query.Offset(offset).Limit(limit).Find(&list).Error
 	return list, count, err
@@ -50,4 +53,9 @@ func (t *Task) TaskNumIsExist(taskNum string) bool {
 
 func (t *Task) AddOneRecord() error {
 	return global.DB.Create(t).Error
+}
+
+func (t *Task) TakeOneRecordByID() (*Task, error) {
+	err := global.DB.Model(t).Preload("Certificates").Preload("Component.Manual").Take(&t, t.ID).Error
+	return t, err
 }

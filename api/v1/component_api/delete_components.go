@@ -26,7 +26,7 @@ func (ComponentApi) DeleteComponents(c *gin.Context) {
 		return
 	}
 	componentService := service.AppService.ComponentService
-	if err := componentService.BatchDeleteComponentAndModify(req.IDs); err != nil {
+	if err := componentService.BatchDeleteComponentAndAssociation(req.IDs); err != nil {
 		response.FailWithMsg(c, response.FAIL_OPER, err.Error())
 		return
 	}
