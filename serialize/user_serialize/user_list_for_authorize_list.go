@@ -8,7 +8,6 @@ type UserForAuthorize struct {
 	ID       uint   `json:"id"`
 	UserName string `json:"user_name"`
 	Group    string `json:"group"`
-	//Role     string `json:"role"`
 }
 
 func BuildUserForAuthorize(item models.User) UserForAuthorize {

@@ -33,23 +33,24 @@ func InitRouter() *gin.Engine {
 	CustomRouter(apiGroup)
 	MenuRouter(apiGroup)
 	RouteRouter(apiGroup)
+	RoleRouter(apiGroup)
 
 	//将全部路由信息存入数据库
-	routeList := []models.Route{}
+	Permissions := []models.Permission{}
 	routes := r.Routes()
 	for _, route := range routes {
-		roter := models.Route{
+		permission := models.Permission{
 			Method: route.Method,
 			Path:   route.Path,
 		}
-		routeList = append(routeList, roter)
+		Permissions = append(Permissions, permission)
 	}
-	var routeModel models.Route
-	if err := routeModel.DeleteAllRecords(); err != nil {
-		global.Logrus.Fatal("清空路由失败")
+	var permissionModel models.Permission
+	if err := permissionModel.DeleteAllRecords(); err != nil {
+		global.Logrus.Fatal("清空权限失败")
 	}
-	if err := routeModel.AddRoutes(routeList); err != nil {
-		global.Logrus.Fatal("添加路由失败")
+	if err := permissionModel.AddRoutes(Permissions); err != nil {
+		global.Logrus.Fatal("添加权限失败")
 	}
 	return r
 }

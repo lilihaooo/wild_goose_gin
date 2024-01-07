@@ -26,11 +26,31 @@ type Task struct {
 	User            *User
 }
 
-func (t *Task) GetAllRecord(offset int, limit int, conditions string) (list []Task, count int64, err error) {
-	query := global.DB.Model(t).Where(conditions).Preload("Component").Preload("Custom").Preload("Certificates").Preload("Modifies")
-	query.Count(&count)
-	err = query.Offset(offset).Limit(limit).Find(&list).Error
-	return list, count, err
+func (t *Task) GetAllRecord(conditions string) (list []Task, err error) {
+	err = global.DB.Model(t).
+		Where(conditions).
+		Preload("Component").
+		Preload("Custom").
+		Preload("Certificates").
+		Preload("Modifies").
+		Preload("User").
+		Find(&list).Error
+	return
+}
+
+func (t *Task) GetAllPagingRecord(limit int, offset int, conditions string) (list []Task, count int64, err error) {
+	q := global.DB.Model(t).
+		Where(conditions)
+	err = q.Count(&count).Error
+	err = q.Limit(limit).
+		Offset(offset).
+		Preload("Component").
+		Preload("Custom").
+		Preload("Certificates").
+		Preload("Modifies").
+		Preload("User").
+		Find(&list).Error
+	return
 }
 
 func (t *Task) GetGroupThisMonthCount(groupID uint) (count int64, err error) {

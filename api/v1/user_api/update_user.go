@@ -4,7 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"wild_goose_gin/global"
 	"wild_goose_gin/models"
-	"wild_goose_gin/models/common_type"
 	"wild_goose_gin/utils"
 
 	"wild_goose_gin/pkg/response"
@@ -31,11 +30,12 @@ func (UserApi) UpdateUser(c *gin.Context) {
 		response.FailWithMsg(c, response.ERROR_EXIST_RECODE, "用户不存在")
 		return
 	}
-	if model.RoleID == common_type.Admin && req.RoleID != common_type.Admin {
-		response.FailWithMsg(c, response.FAIL_OPER, "管理员角色不能修改")
-		return
-	}
-	model.RoleID = req.RoleID
+	// todo 更改role
+	//if model.RoleID == common_type.Admin && req.RoleID != common_type.Admin {
+	//	response.FailWithMsg(c, response.FAIL_OPER, "管理员角色不能修改")
+	//	return
+	//}
+	//model.RoleID = req.RoleID
 	model.GroupID = &req.GroupID
 	if err := model.UpdateOneRecord(); err != nil {
 		response.FailWithMsg(c, response.FAIL_OPER, "")

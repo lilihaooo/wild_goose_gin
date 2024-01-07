@@ -20,7 +20,7 @@ func Makemigrations() {
 			&models.Task{},
 			&models.Image{},
 			&models.Menu{},
-			&models.Route{},
+			&models.Permission{},
 			&models.Role{},
 			&models.UserManual{},
 			&models.UserManualCertificate{},

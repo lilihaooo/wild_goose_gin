@@ -8,17 +8,15 @@ import (
 	"wild_goose_gin/serialize"
 )
 
-func (TaskApi) GetTaskList(c *gin.Context) {
+func (TaskApi) GetMyTaskingPagingList(c *gin.Context) {
 	req := request.NewPaginationReq()
 	if err := c.ShouldBindJSON(&req); err != nil {
 		response.FailWithMsg(c, response.INVALID_PARAMS, err.Error()) // todo 去掉真实的error
 		return
 	}
-	offset := req.GetOffset()
-	limit := req.PageSize
-	conditionStr := req.GetConditionStr()
+	conditionStr := request.GetConditionStr(*req.Conditions)
 	var model models.Task
-	list, count, err := model.GetAllRecord(offset, limit, conditionStr)
+	list, count, err := model.GetAllPagingRecord(req.PageSize, req.GetOffset(), conditionStr)
 	if err != nil {
 		response.FailWithMsg(c, response.FAIL_OPER, "")
 		return

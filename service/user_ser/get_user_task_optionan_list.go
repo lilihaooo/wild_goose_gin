@@ -6,7 +6,7 @@ import (
 	"wild_goose_gin/models"
 )
 
-func (s UserService) GetUserTaskOptionalList(taskID uint) (users []models.User, newErr error) {
+func (s UserService) GetUserTaskOptionalList(taskID uint, groupID uint) (users []models.User, newErr error) {
 	// 根据任务ID获取任务
 	var taskModel models.Task
 	taskModel.ID = taskID
@@ -26,7 +26,6 @@ func (s UserService) GetUserTaskOptionalList(taskID uint) (users []models.User, 
 		if err != nil {
 			global.Logrus.Error(err)
 		}
-		return
 	} else {
 		// 获取具有该手册同时具备该授权的用户
 		var certificateIDs []uint
@@ -34,8 +33,10 @@ func (s UserService) GetUserTaskOptionalList(taskID uint) (users []models.User, 
 			certificateIDs = append(certificateIDs, one.ID)
 		}
 		users, err = getHasManualAndCertificatesUserList(manual.ID, certificateIDs)
-		return
 	}
+	// 过滤出当前小组的用户
+	users = filterUser(users, groupID)
+	return
 }
 
 func getHasManualAllUserList(manualID uint) (users []models.User, err error) {
@@ -90,4 +91,14 @@ func hasAllCertificates(umcs []models.UserManualCertificate, certificateMap map[
 		}
 	}
 	return len(newMap) == 0
+}
+
+// 过滤出只有当前分组的user
+func filterUser(allUsers []models.User, groupID uint) (users []models.User) {
+	for _, user := range allUsers {
+		if *user.GroupID == groupID {
+			users = append(users, user)
+		}
+	}
+	return
 }

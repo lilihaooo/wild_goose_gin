@@ -39,6 +39,7 @@ func (UserApi) Login(c *gin.Context) {
 		global.Logrus.Error(err)
 		return
 	}
+	fmt.Println(user.Password)
 	// 验证密码是否正确
 	ok := utils.CheckPasswordHash(req.Password, user.Password)
 	if !ok {
@@ -49,7 +50,7 @@ func (UserApi) Login(c *gin.Context) {
 		UserID:   user.ID,
 		UserName: user.UserName,
 		NickName: user.NickName,
-		RoleID:   user.Role.ID,
+		//RoleID:   user.Role.ID,   todo 更改role
 	}
 	token := jwts.GenToken(payload)
 	key := fmt.Sprintf("jwt_token:%d:%s", user.ID, token)

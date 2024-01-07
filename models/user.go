@@ -1,6 +1,7 @@
 package models
 
 import (
+	"gorm.io/gorm"
 	"wild_goose_gin/global"
 	"wild_goose_gin/models/common_type"
 	"wild_goose_gin/pkg/request"
@@ -18,9 +19,8 @@ type User struct {
 	Addr          string `gorm:"comment:地址" json:"addr"`
 	IP            string `gorm:"comment:ip地址" json:"ip"`
 	Profile       string `gorm:"comment:简介" json:"profile"`
-	RoleID        uint
-	Role          *Role
-	GroupID       *uint `gorm:"comment:小组  1 燃油  2 液压  3 电源  4 电气" json:"group_id"`
+	Roles         []Role `gorm:"many2many:user_role;"`
+	GroupID       *uint  `gorm:"comment:小组  1 燃油  2 液压  3 电源  4 电气" json:"group_id"`
 	Group         *Group
 	Manuals       *[]Manual `gorm:"many2many:user_manual;"`
 }
@@ -30,18 +30,13 @@ func (u *User) UpdateAvatarImageID() error {
 }
 
 func (u *User) GetUserInfoByID() (user *User, err error) {
-	err = global.DB.Preload("AvatarImage").Preload("Role").Take(u, u.ID).Error
+	err = global.DB.Preload("AvatarImage").Preload("Group").Preload("Roles").Take(u, u.ID).Error
 	return u, err
 }
 
 func (u *User) GetUserInfoByUserName() (user *User, err error) {
-	err = global.DB.Where("user_name = ?", u.UserName).Preload("Role").Take(u).Error
+	err = global.DB.Where("user_name = ?", u.UserName).Preload("Roles").Preload("Group").Take(u).Error
 	return u, err
-}
-
-func (u *User) GetUserRoleID() (roleID uint, err error) {
-	err = global.DB.Take(u).Error
-	return u.RoleID, nil
 }
 
 func (u *User) GetUserAuthorizeUserList(pReq *request.PaginationReq) (users []User, count int64, err error) {
@@ -53,7 +48,7 @@ func (u *User) GetUserAuthorizeUserList(pReq *request.PaginationReq) (users []Us
 			Joins("LEFT JOIN `group` ON user.group_id = `group`.id")
 	}
 	db.Count(&count)
-	err = db.Preload("Role").Preload("Group").Limit(limit).Offset(offset).Find(&users).Error
+	err = db.Preload("Group").Limit(limit).Offset(offset).Find(&users).Error
 	return
 }
 
@@ -62,7 +57,7 @@ func (u *User) GetUserList(pReq *request.PaginationReq) (users []User, count int
 	offset := pReq.GetOffset()
 	db := global.DB.Model(u)
 	db.Count(&count)
-	err = db.Preload("Role").Preload("Group").Limit(limit).Offset(offset).Find(&users).Error
+	err = db.Preload("Roles").Preload("Group").Limit(limit).Offset(offset).Find(&users).Error
 	return
 }
 
@@ -91,4 +86,17 @@ func (u *User) GetUserAuthorizeList() (user User, err error) {
 func (u *User) TakeOneUser() (*User, error) {
 	err := global.DB.Take(u).Error
 	return u, err
+}
+
+func (u *User) TakeOneUserWithRoleIDs() (*User, error) {
+	err := global.DB.Preload("Roles", func(db *gorm.DB) *gorm.DB {
+		return db.Select("id")
+	}).Take(u).Error
+
+	return u, err
+}
+
+func (u *User) ReplaceRoles() error {
+	return global.DB.Model(u).Association("Roles").Replace(u.Roles)
+
 }

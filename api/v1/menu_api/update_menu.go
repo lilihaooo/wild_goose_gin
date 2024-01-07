@@ -42,17 +42,17 @@ func (MenuApi) UpdateMenu(c *gin.Context) {
 	if req.ParentID == 0 {
 		menu.Icon = req.Icon
 	}
-	// 2. 如果修改的是菜单: path, routes
-	if req.Type == common_type.IsMenu {
-		var routeModel models.Route
-		routes, err := routeModel.GetRouteListByIDs(req.RouteIDs)
-		if err != nil {
-			response.FailWithMsg(c, response.FAIL_OPER, "")
-			return
-		}
-		menu.Path = req.Path
-		menu.Routes = routes
-	}
+	// 2. 如果修改的是菜单: path, routes  // todo 菜单权限表移除
+	//if req.Type == common_type.IsMenu {
+	//	var routeModel models.Permission
+	//	routes, err := routeModel.GetRouteListByIDs(req.RouteIDs)
+	//	if err != nil {
+	//		response.FailWithMsg(c, response.FAIL_OPER, "")
+	//		return
+	//	}
+	//	menu.Path = req.Path
+	//	//menu.Routes = routes
+	//}
 	// 修改菜单
 	err = menu.SaveMenu()
 	if err != nil {

@@ -13,7 +13,7 @@ type GetAllRouteListRes struct {
 }
 
 func (RouteApi) GetAllRouteList(c *gin.Context) {
-	var model models.Route
+	var model models.Permission
 	routes, err := model.GetRouteList()
 	if err != nil {
 		response.FailWithMsg(c, response.FAIL_OPER, "")

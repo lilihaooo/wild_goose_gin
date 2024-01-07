@@ -5,7 +5,6 @@ import "encoding/json"
 type TaskShareType int
 
 const (
-	// todo 与前端不一致
 	UnShared TaskShareType = 1 // 未分配
 	Shared   TaskShareType = 2 // 已分配
 )

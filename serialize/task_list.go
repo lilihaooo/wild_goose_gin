@@ -11,6 +11,7 @@ type Task struct {
 	TaskNum       string `json:"task_num"`
 	CustomName    string `json:"custom_name"`
 	ComponentName string `json:"component_name"`
+	UserName      string `json:"user_name"`
 
 	Demand          common_type.TaskDemandType `json:"demand"`
 	Certificates    string                     `json:"certificates"`
@@ -33,7 +34,10 @@ func BuildTask(item models.Task) Task {
 		// 去掉末尾的空格
 		certificates = certificates[:len(certificates)-1]
 	}
-
+	userName := ""
+	if item.User != nil {
+		userName = item.User.UserName
+	}
 	return Task{
 		ID:            item.Model.ID,
 		TaskNum:       item.TaskNum,
@@ -41,6 +45,7 @@ func BuildTask(item models.Task) Task {
 		ComponentName: item.Component.Name,
 		PN:            item.Component.PN,
 		SN:            item.SN,
+		UserName:      userName,
 
 		Demand:          item.Demand,
 		Certificates:    certificates,

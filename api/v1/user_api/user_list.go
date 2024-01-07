@@ -58,28 +58,7 @@ func (UserApi) UserAuthorizeUserList(c *gin.Context) {
 	response.OkWithList(c, res, count)
 }
 
-func (UserApi) UserAuthorizeList(c *gin.Context) {
-	idStr := c.Query("id")
-	if idStr == "" {
-		response.FailWithMsg(c, response.INVALID_PARAMS, "id不能为空")
-		return
-	}
-	id, _ := strconv.Atoi(idStr)
-	var model models.UserManual
-	model.UserID = uint(id)
-	userManuals, err := model.GetRecordByUserID()
-	if err != nil {
-		if err != nil {
-			global.Logrus.Error(err)
-			response.FailWithMsg(c, response.FAIL_OPER, "查询失败")
-			return
-		}
-	}
-	list := user_serialize.BuildUserAuthorizes(userManuals)
-	response.OkWithData(c, list)
-}
-
-// 获得某个任务可以选择的用户列表
+// UserTaskOptionalList 获得某个任务可以选择的用户列表
 func (UserApi) UserTaskOptionalList(c *gin.Context) {
 	taskIDStr := c.Query("id")
 	if taskIDStr == "" {
@@ -88,7 +67,14 @@ func (UserApi) UserTaskOptionalList(c *gin.Context) {
 	}
 	taskID, _ := strconv.Atoi(taskIDStr)
 
-	users, err := service.AppService.GetUserTaskOptionalList(uint(taskID))
+	groupIDStr := c.Query("group_id")
+	if groupIDStr == "" {
+		response.FailWithMsg(c, response.INVALID_PARAMS, "group_id不能为空")
+		return
+	}
+	groupID, _ := strconv.Atoi(groupIDStr)
+
+	users, err := service.AppService.GetUserTaskOptionalList(uint(taskID), uint(groupID))
 	if err != nil {
 		response.FailWithMsg(c, response.FAIL_OPER, err.Error())
 		return

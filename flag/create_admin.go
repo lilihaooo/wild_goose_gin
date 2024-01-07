@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"wild_goose_gin/global"
 	"wild_goose_gin/models"
-	"wild_goose_gin/models/common_type"
 	"wild_goose_gin/utils"
 )
 
@@ -58,7 +57,7 @@ func CreateAdmin() {
 	userModel.Addr = "内网地址"
 	userModel.IP = "127.0.0.1"
 	userModel.Email = cr.Email
-	userModel.Role.ID = common_type.Admin
+	//userModel.Role.ID = common_type.Admin  todo 更改role
 	if err = global.DB.Create(&userModel).Error; err != nil {
 		fmt.Println("添加失败!!!")
 		return

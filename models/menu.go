@@ -12,12 +12,12 @@ type Menu struct {
 	Title    string               `json:"title"`
 	ParentID *uint                `json:"parent_id,omitempty"`
 	Type     common_type.MenuType `json:"type"`
-	Routes   []*Route             `json:"routes"gorm:"many2many:menu_route;"`
+	Sort     int32                `json:"sort"`
 	Subs     []*Menu              `json:"subs" gorm:"foreignKey:ParentID"`
 }
 
 func (m *Menu) GetAllRecord() (menus []*Menu, err error) {
-	err = global.DB.Find(&menus).Error
+	err = global.DB.Order("sort desc").Find(&menus).Error
 	return
 }
 
