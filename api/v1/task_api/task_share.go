@@ -20,6 +20,10 @@ func (TaskApi) TaskShare(c *gin.Context) {
 		response.FailWithMsg(c, response.INVALID_PARAMS, err.Error()) // todo 去掉真实的error
 		return
 	}
+	if len(req) == 0 {
+		response.FailWithMsg(c, response.INVALID_PARAMS, "请选择")
+		return
+	}
 
 	var caseClauses []string
 	for _, one := range req {
@@ -38,7 +42,7 @@ func (TaskApi) TaskShare(c *gin.Context) {
 	sql := "UPDATE task SET user_id =  CASE " + strings.Join(caseClauses, " ") + " ELSE user_id END, share = CASE WHEN user_id IS NOT NULL THEN 2 ELSE 1 END"
 	query := global.DB.Exec(sql)
 	if query.Error != nil {
-		response.FailWithMsg(c, response.FAIL_OPER, "查询失败") // todo 错误
+		response.FailWithMsg(c, response.FAIL_OPER, "执行失败") // todo 错误
 		return
 	}
 	if query.RowsAffected == 0 {

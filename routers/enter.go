@@ -34,6 +34,7 @@ func InitRouter() *gin.Engine {
 	MenuRouter(apiGroup)
 	RouteRouter(apiGroup)
 	RoleRouter(apiGroup)
+	MaterialRouter(apiGroup)
 
 	//将全部路由信息存入数据库
 	Permissions := []models.Permission{}

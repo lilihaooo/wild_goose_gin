@@ -26,7 +26,7 @@ func (r *Role) GetRoleMenuList() (menus []*Menu, err error) {
 	return r.Menus, err
 }
 
-func (c *Role) GetRolesByIDs(ids []uint) (roles []Role, err error) {
+func (r *Role) GetRolesByIDs(ids []uint) (roles []Role, err error) {
 	err = global.DB.Where("id IN ?", ids).Find(&roles).Error
 	return roles, err
 }

@@ -79,3 +79,8 @@ func (t *Task) TakeOneRecordByID() (*Task, error) {
 	err := global.DB.Model(t).Preload("Certificates").Preload("Component.Manual").Take(&t, t.ID).Error
 	return t, err
 }
+
+func (t *Task) TakeOneRecordByID2() (*Task, error) {
+	err := global.DB.Model(t).Preload("Custom").Preload("Modifies").Preload("Component.Manual").Take(&t, t.ID).Error
+	return t, err
+}

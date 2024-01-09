@@ -24,6 +24,7 @@ func Makemigrations() {
 			&models.Role{},
 			&models.UserManual{},
 			&models.UserManualCertificate{},
+			&models.Material{},
 		)
 	if err != nil {
 		global.Logrus.Errorf("生成数据库表结构失败:%s", err)

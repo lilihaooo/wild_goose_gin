@@ -1,10 +1,10 @@
 mysql:
-    host: 127.0.0.1
-    port: 3306
+    host: 47.109.31.106
+    port: 3307
     username: root
     password: a111111
     db: wild_goose_gin
-    log_level: info
+    log_level: error
 redis:
     addr: localhost:6379
     password: a111111

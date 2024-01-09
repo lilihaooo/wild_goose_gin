@@ -12,4 +12,5 @@ func TaskRouter(appGroup *gin.RouterGroup) {
 	v1Group.POST("task/my_tasking/paging", v1.ApiGroupApp.TaskApi.GetMyTaskingPagingList)
 	v1Group.POST("task/add", v1.ApiGroupApp.TaskApi.CreateTask)
 	v1Group.POST("task/share", v1.ApiGroupApp.TaskApi.TaskShare)
+	v1Group.GET("task", v1.ApiGroupApp.TaskApi.GetTaskInfo)
 }

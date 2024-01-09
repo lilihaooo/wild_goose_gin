@@ -4,6 +4,7 @@ import (
 	"wild_goose_gin/api/v1/component_api"
 	"wild_goose_gin/api/v1/custom_api"
 	"wild_goose_gin/api/v1/manual_api"
+	"wild_goose_gin/api/v1/material_api"
 	"wild_goose_gin/api/v1/menu_api"
 	"wild_goose_gin/api/v1/modify_api"
 	"wild_goose_gin/api/v1/role_api"
@@ -24,6 +25,7 @@ type ApiGroup struct {
 	MenuApi      menu_api.MenuApi
 	RouteApi     route_api.RouteApi
 	RoleApi      role_api.RoleApi
+	MaterialApi  material_api.MaterialApi
 }
 
 var ApiGroupApp = new(ApiGroup)
