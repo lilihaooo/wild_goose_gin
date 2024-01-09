@@ -1,6 +1,5 @@
 # 导入基础镜像golang:alpine
-FROM registry.cn-hangzhou.aliyuncs.com/library/golang:alpine AS builder
-
+FROM golang:alpine AS builder
 
 # 设置环境变量
 ENV GO111MODULE=auto \
