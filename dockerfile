@@ -1,5 +1,7 @@
 # 导入基础镜像golang:alpine
+# 失败的话： 先 docker pull golang:alpine
 FROM golang:alpine AS builder
+
 
 # 设置环境变量
 ENV GO111MODULE=auto \

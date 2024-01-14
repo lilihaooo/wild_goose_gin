@@ -5,13 +5,14 @@ import (
 )
 
 type Manual struct {
-	ID      uint    `json:"id"`
-	Num     string  `gorm:"comment:件名" json:"name"`
-	Version string  `gorm:"comment:版本" json:"version"`
-	Users   *[]User `gorm:"many2many:user_manual;"`
+	ID        uint        `json:"id"`
+	Num       string      `gorm:"comment:件名" json:"name"`
+	Version   string      `gorm:"comment:版本" json:"version"`
+	Users     *[]User     `gorm:"many2many:user_manual;"`
+	Materials *[]Material `gorm:"many2many:manual_material;"`
 }
 
-func (m *Manual) GetInputList() (list []Manual, err error) {
+func (m *Manual) GetList() (list []Manual, err error) {
 	err = global.DB.Find(&list).Error
 	return list, err
 }

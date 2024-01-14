@@ -5,7 +5,7 @@ import (
 	"wild_goose_gin/models"
 )
 
-func (s TaskService) CreateTask(task *models.Task, incomeTotal, claimTotal int) error {
+func (s TaskService) CreateTask(task *models.Task, isClaim bool) error {
 	var component models.Component
 	component.ID = task.ComponentID
 	// 开启事务同时修改component数据, 和添加任务
@@ -15,8 +15,10 @@ func (s TaskService) CreateTask(task *models.Task, incomeTotal, claimTotal int) 
 		tx.Rollback()
 		return err
 	}
-	component.IncomeTotal = incomeTotal
-	component.ClaimTotal = claimTotal
+	component.IncomeTotal = component.IncomeTotal + 1
+	if isClaim {
+		component.ClaimTotal = component.ClaimTotal + 1
+	}
 	err = tx.Save(&component).Error
 	if err != nil {
 		tx.Rollback()

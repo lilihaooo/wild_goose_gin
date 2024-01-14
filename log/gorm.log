@@ -1,0 +1,54 @@
+
+2024/01/09 23:49:57 /home/lh/go/src/wild_goose_gin/models/task.go:69 record not found
+[73.699ms] [rows:0] SELECT * FROM `task` WHERE task_num = 'F24010002' AND `task`.`deleted_at` IS NULL LIMIT 1
+
+2024/01/09 23:54:16 /home/lh/go/src/wild_goose_gin/models/task.go:69 record not found
+[86.611ms] [rows:0] SELECT * FROM `task` WHERE task_num = 'F24010003' AND `task`.`deleted_at` IS NULL LIMIT 1
+
+2024/01/09 23:55:52 /home/lh/go/src/wild_goose_gin/models/task.go:69 record not found
+[78.125ms] [rows:0] SELECT * FROM `task` WHERE task_num = 'F24010004' AND `task`.`deleted_at` IS NULL LIMIT 1
+
+2024/01/10 00:01:10 /home/lh/go/src/wild_goose_gin/models/task.go:69 record not found
+[77.263ms] [rows:0] SELECT * FROM `task` WHERE task_num = 'F24010005' AND `task`.`deleted_at` IS NULL LIMIT 1
+
+2024/01/10 00:17:09 /home/lh/go/src/wild_goose_gin/models/task.go:69 record not found
+[77.416ms] [rows:0] SELECT * FROM `task` WHERE task_num = 'F24010006' AND `task`.`deleted_at` IS NULL LIMIT 1
+
+2024/01/10 00:18:02 /home/lh/go/src/wild_goose_gin/models/task.go:69 record not found
+[78.111ms] [rows:0] SELECT * FROM `task` WHERE task_num = 'F24010007' AND `task`.`deleted_at` IS NULL LIMIT 1
+
+2024/01/13 15:24:23 /home/lh/go/src/wild_goose_gin/flag/fake/material.go:74 Error 1292 (22007): Incorrect datetime value: '0000-00-00' for column 'expiry_at' at row 1
+[22.175ms] [rows:0] INSERT INTO `material` (`name`,`pn`,`bn`,`storage_num`,`count`,`unit`,`manufacturer`,`price`,`min_count`,`created_at`,`expiry_at`,`remark`) VALUES ('','','','',10,'','',0,0,'2024-01-13 15:24:23.901','0000-00-00 00:00:00',''),('','','','',10,'','',0,0,'2024-01-13 15:24:23.901','0000-00-00 00:00:00',''),('','','','',10,'','',0,0,'2024-01-13 15:24:23.901','0000-00-00 00:00:00',''),('','','','',10,'','',0,0,'2024-01-13 15:24:23.901','0000-00-00 00:00:00',''),('','','','',10,'','',0,0,'2024-01-13 15:24:23.901','0000-00-00 00:00:00',''),('','','','',10,'','',0,0,'2024-01-13 15:24:23.901','0000-00-00 00:00:00',''),('','','','',10,'','',0,0,'2024-01-13 15:24:23.901','0000-00-00 00:00:00',''),('','','','',10,'','',0,0,'2024-01-13 15:24:23.901','0000-00-00 00:00:00',''),('','','','',10,'','',0,0,'2024-01-13 15:24:23.901','0000-00-00 00:00:00',''),('','','','',10,'','',0,0,'2024-01-13 15:24:23.901','0000-00-00 00:00:00','')
+
+2024/01/14 15:10:07 /home/lh/go/src/wild_goose_gin/flag/makemigrations.go:12 Error 1068 (42000): Multiple primary key defined
+[7.257ms] [rows:0] ALTER TABLE `manual_material` ADD `manual_material_id` bigint unsigned, ADD PRIMARY KEY (`manual_material_id`)
+
+2024/01/14 15:11:35 /home/lh/go/src/wild_goose_gin/flag/makemigrations.go:12 Error 1068 (42000): Multiple primary key defined
+[4.863ms] [rows:0] ALTER TABLE `manual_material` ADD `manual_material_id` bigint unsigned, ADD PRIMARY KEY (`manual_material_id`)
+
+2024/01/14 15:12:30 /home/lh/go/src/wild_goose_gin/flag/makemigrations.go:12 Error 1068 (42000): Multiple primary key defined
+[5.437ms] [rows:0] ALTER TABLE `manual_material` ADD `manual_material_id` bigint unsigned, ADD PRIMARY KEY (`manual_material_id`)
+
+2024/01/14 15:12:33 /home/lh/go/src/wild_goose_gin/flag/makemigrations.go:12 Error 1068 (42000): Multiple primary key defined
+[5.565ms] [rows:0] ALTER TABLE `manual_material` ADD `manual_material_id` bigint unsigned, ADD PRIMARY KEY (`manual_material_id`)
+
+2024/01/14 15:13:29 /home/lh/go/src/wild_goose_gin/flag/makemigrations.go:12 Error 3734 (HY000): Failed to add the foreign key constraint. Missing column 'id' for constraint 'fk_manual_material_manual_material' in the referenced table 'manual_material'
+[4.272ms] [rows:0] CREATE TABLE `manual_material` (`manual_material_id` bigint unsigned,`material_id` bigint unsigned,PRIMARY KEY (`manual_material_id`,`material_id`),CONSTRAINT `fk_manual_material_material` FOREIGN KEY (`material_id`) REFERENCES `material`(`id`),CONSTRAINT `fk_manual_material_manual_material` FOREIGN KEY (`manual_material_id`) REFERENCES `manual_material`(`id`))ENGINE=InnoDB
+
+2024/01/14 15:13:32 /home/lh/go/src/wild_goose_gin/flag/makemigrations.go:12 Error 3734 (HY000): Failed to add the foreign key constraint. Missing column 'id' for constraint 'fk_manual_material_manual_material' in the referenced table 'manual_material'
+[5.057ms] [rows:0] CREATE TABLE `manual_material` (`manual_material_id` bigint unsigned,`material_id` bigint unsigned,PRIMARY KEY (`manual_material_id`,`material_id`),CONSTRAINT `fk_manual_material_manual_material` FOREIGN KEY (`manual_material_id`) REFERENCES `manual_material`(`id`),CONSTRAINT `fk_manual_material_material` FOREIGN KEY (`material_id`) REFERENCES `material`(`id`))ENGINE=InnoDB
+
+2024/01/14 15:14:18 /home/lh/go/src/wild_goose_gin/flag/makemigrations.go:12 Error 3734 (HY000): Failed to add the foreign key constraint. Missing column 'id' for constraint 'fk_manual_material_manual_material' in the referenced table 'manual_material'
+[5.748ms] [rows:0] CREATE TABLE `manual_material` (`manual_material_id` bigint unsigned,`material_id` bigint unsigned,PRIMARY KEY (`manual_material_id`,`material_id`),CONSTRAINT `fk_manual_material_manual_material` FOREIGN KEY (`manual_material_id`) REFERENCES `manual_material`(`id`),CONSTRAINT `fk_manual_material_material` FOREIGN KEY (`material_id`) REFERENCES `material`(`id`))ENGINE=InnoDB
+
+2024/01/14 15:14:41 /home/lh/go/src/wild_goose_gin/flag/makemigrations.go:12 Error 3734 (HY000): Failed to add the foreign key constraint. Missing column 'id' for constraint 'fk_manual_material_manual_material' in the referenced table 'manual_material'
+[6.175ms] [rows:0] CREATE TABLE `manual_material` (`manual_material_id` bigint unsigned,`material_id` bigint unsigned,PRIMARY KEY (`manual_material_id`,`material_id`),CONSTRAINT `fk_manual_material_material` FOREIGN KEY (`material_id`) REFERENCES `material`(`id`),CONSTRAINT `fk_manual_material_manual_material` FOREIGN KEY (`manual_material_id`) REFERENCES `manual_material`(`id`))ENGINE=InnoDB
+
+2024/01/14 15:16:34 /home/lh/go/src/wild_goose_gin/flag/makemigrations.go:12 Error 3734 (HY000): Failed to add the foreign key constraint. Missing column 'id' for constraint 'fk_manual_material_manual_material' in the referenced table 'manual_material'
+[5.913ms] [rows:0] CREATE TABLE `manual_material` (`manual_material_id` bigint unsigned,`material_id` bigint unsigned,PRIMARY KEY (`manual_material_id`,`material_id`),CONSTRAINT `fk_manual_material_manual_material` FOREIGN KEY (`manual_material_id`) REFERENCES `manual_material`(`id`),CONSTRAINT `fk_manual_material_material` FOREIGN KEY (`material_id`) REFERENCES `material`(`id`))ENGINE=InnoDB
+
+2024/01/14 15:16:38 /home/lh/go/src/wild_goose_gin/flag/makemigrations.go:12 Error 3734 (HY000): Failed to add the foreign key constraint. Missing column 'id' for constraint 'fk_manual_material_manual_material' in the referenced table 'manual_material'
+[4.849ms] [rows:0] CREATE TABLE `manual_material` (`manual_material_id` bigint unsigned,`material_id` bigint unsigned,PRIMARY KEY (`manual_material_id`,`material_id`),CONSTRAINT `fk_manual_material_material` FOREIGN KEY (`material_id`) REFERENCES `material`(`id`),CONSTRAINT `fk_manual_material_manual_material` FOREIGN KEY (`manual_material_id`) REFERENCES `manual_material`(`id`))ENGINE=InnoDB
+
+2024/01/14 15:17:18 /home/lh/go/src/wild_goose_gin/flag/makemigrations.go:12 Error 3734 (HY000): Failed to add the foreign key constraint. Missing column 'id' for constraint 'fk_manual_material_manual_material' in the referenced table 'manual_material'
+[5.283ms] [rows:0] CREATE TABLE `manual_material` (`manual_material_id` bigint unsigned,`material_id` bigint unsigned,PRIMARY KEY (`manual_material_id`,`material_id`),CONSTRAINT `fk_manual_material_manual_material` FOREIGN KEY (`manual_material_id`) REFERENCES `manual_material`(`id`),CONSTRAINT `fk_manual_material_material` FOREIGN KEY (`material_id`) REFERENCES `material`(`id`))ENGINE=InnoDB

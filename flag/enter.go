@@ -2,18 +2,23 @@ package flag
 
 import (
 	sys_flag "flag"
+	"fmt"
 	"github.com/fatih/structs"
+	"time"
+	"wild_goose_gin/flag/fake"
 )
 
 type Option struct {
 	DB   bool
 	User string
 	Es   string
+	Fake string
 }
 
 // Parse 解析命令行参数
 func Parse() Option {
-	db := sys_flag.Bool("db", false, "初始化数据库") // false 默认值, 含有-db就为true
+	db := sys_flag.Bool("db", false, "初始化数据库")    // false 默认值, 含有-db就为true
+	fake := sys_flag.String("fake", "", "生成模拟数据") // false 默认值, 含有-db就为true
 	user := sys_flag.String("u", "", "创建用户")
 	es := sys_flag.String("es", "", "es操作")
 	// 解析命令行参数写入注册的flag里
@@ -22,6 +27,7 @@ func Parse() Option {
 		DB:   *db,
 		User: *user,
 		Es:   *es,
+		Fake: *fake,
 	}
 }
 
@@ -55,12 +61,15 @@ func SwitchOption(option Option) {
 		CreateAdmin()
 		return
 	}
-	//if option.Es == "create" {
-	//	CreateEsIndex()
-	//	return
-	//}
-	//if option.Es == "delete" {
-	//	DeleteEsIndex()
-	//	return
-	//}
+
+	// 伪造数据
+	if option.Fake == "material" {
+		startTime := time.Now() // 记录开始时间
+		for i := 0; i < 20; i++ {
+			fake.FakeMaterial()
+		}
+		elapsedTime := time.Since(startTime) // 计算经过的时间
+		fmt.Printf("总共执行时间: %s\n", elapsedTime)
+	}
+
 }

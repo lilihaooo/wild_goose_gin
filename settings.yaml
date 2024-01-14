@@ -6,7 +6,7 @@ mysql:
     db: wild_goose_gin
     log_level: error
 redis:
-    addr: localhost:6379
+    addr: 47.109.31.106:6379
     password: a111111
     db: 1
 logger:

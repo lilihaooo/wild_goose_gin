@@ -29,6 +29,7 @@ type Task struct {
 func (t *Task) GetAllRecord(conditions string) (list []Task, err error) {
 	err = global.DB.Model(t).
 		Where(conditions).
+		Order("id desc").
 		Preload("Component").
 		Preload("Custom").
 		Preload("Certificates").
@@ -44,6 +45,7 @@ func (t *Task) GetAllPagingRecord(limit int, offset int, conditions string) (lis
 	err = q.Count(&count).Error
 	err = q.Limit(limit).
 		Offset(offset).
+		Order("id desc").
 		Preload("Component").
 		Preload("Custom").
 		Preload("Certificates").

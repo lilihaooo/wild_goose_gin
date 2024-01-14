@@ -5,6 +5,7 @@ import (
 	"wild_goose_gin/models"
 	"wild_goose_gin/pkg/request"
 	"wild_goose_gin/pkg/response"
+	"wild_goose_gin/serialize/material_serialize"
 )
 
 func (MaterialApi) GetMaterialSearchList(c *gin.Context) {
@@ -19,5 +20,7 @@ func (MaterialApi) GetMaterialSearchList(c *gin.Context) {
 		response.FailWithMsg(c, response.FAIL_OPER, "")
 		return
 	}
-	response.OkWithList(c, list, count)
+	res := material_serialize.BuildMaterials(list)
+
+	response.OkWithList(c, res, count)
 }

@@ -108,17 +108,12 @@ func (TaskApi) CreateTask(c *gin.Context) {
 		response.FailWithMsg(c, response.FAIL_OPER, "任务号已存在")
 		return
 	}
-	// 入场总数+1
-	incomeTotal := component.IncomeTotal + 1
-	// 如果是索赔, 索赔数+1
-	claimTotal := component.ClaimTotal
-	if req.DemandType == common_type.Claim {
-		claimTotal = component.ClaimTotal + 1
-	}
+
 	task.ComponentID = component.ID
 	task.SN = req.SN
 	task.CustomID = custom.ID
 	task.Node = common_type.TaskStart
+	task.Share = common_type.UnShared
 	task.Demand = req.DemandType
 	task.Modifies = modifies
 	task.GroupID = component.GroupID
@@ -126,8 +121,14 @@ func (TaskApi) CreateTask(c *gin.Context) {
 	task.Remark = req.Remark
 	task.PlanReleaseDate = parsedTime
 	task.TaskNum = taskNum
+
+	var isClaim = false
+	if req.DemandType == common_type.Claim {
+		isClaim = true
+	}
+
 	// 任务下发
-	err = service.AppService.TaskService.CreateTask(&task, incomeTotal, claimTotal)
+	err = service.AppService.TaskService.CreateTask(&task, isClaim)
 	if err != nil {
 		response.FailWithMsg(c, response.FAIL_OPER, err.Error()) // todo 错误
 		return
